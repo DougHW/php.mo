@@ -21,9 +21,8 @@ https://github.com/josscrowcroft/php.mo
 
 **Credit:**
 
-Based on php-msgfmt by Matthias Bauer (Copyright © 2007), a command-line PHP tool
-for converting .po files to .mo.
-(http://wordpress-soc-2007.googlecode.com/svn/trunk/moeffju/php-msgfmt/msgfmt.php)
+Based on php-msgfmt by Matthias Bauer (Copyright &copy; 2007), a command-line PHP tool
+for converting .po files to .mo. ([http://wordpress-soc-2007.googlecode.com/svn/trunk/moeffju/php-msgfmt/msgfmt.php](http://wordpress-soc-2007.googlecode.com/svn/trunk/moeffju/php-msgfmt/msgfmt.php))
 
 **License:**
 
