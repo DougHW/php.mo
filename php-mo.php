@@ -48,7 +48,6 @@ function phpmo_clean_helper($x) {
 			$x = substr($x, 1, -1);
 		$x = str_replace("\"\n\"", '', $x);
 		$x = str_replace('$', '\\$', $x);
-		$x = @ eval ("return \"$x\";");
 	}
 	return $x;
 }
@@ -57,15 +56,11 @@ function phpmo_clean_helper($x) {
 /* @link http://www.gnu.org/software/gettext/manual/gettext.html#PO-Files */
 function phpmo_parse_po_file($in) {
 	// read .po file
-	$fc = file_get_contents($in);
-	// normalize newlines
-	$fc = str_replace(array (
-		"\r\n",
-		"\r"
-	), array (
-		"\n",
-		"\n"
-	), $fc);
+	$fh = fopen($in, 'r');
+	if ($fh === false) {
+		// Could not open file resource
+		return false;
+	}
 
 	// results array
 	$hash = array ();
@@ -76,13 +71,13 @@ function phpmo_parse_po_file($in) {
 	$fuzzy = false;
 
 	// iterate over lines
-	foreach (explode("\n", $fc) as $line) {
+	while(($line = fgets($fh, 65536)) !== false) {
 		$line = trim($line);
 		if ($line === '')
 			continue;
 
-		list ($key, $data) = explode(' ', $line, 2);
-
+		list ($key, $data) = preg_split('/\s/', $line, 2);
+		
 		switch ($key) {
 			case '#,' : // flag...
 				$fuzzy = in_array('fuzzy', preg_split('/,\s*/', $data));
@@ -131,13 +126,15 @@ function phpmo_parse_po_file($in) {
 							break;
 						default :
 							// parse error
+							fclose($fh);
 							return FALSE;
 					}
 				}
 				break;
 		}
 	}
-
+	fclose($fh);
+	
 	// add final entry
 	if ($state == 'msgstr')
 		$hash[] = $temp;
